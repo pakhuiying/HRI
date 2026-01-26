@@ -11,6 +11,18 @@ import shapely.ops as so
 import pandas as pd
 import numpy as np
 
+def calculate_serviceArea(serviceArea):
+    """ 
+    Args:
+        serviceArea (gpd): polygon collection in a gdf that represents the union of the service area
+    Returns:
+        float: Area of service area in km2
+    """
+    serviceArea = serviceArea.to_crs({'proj':'cea'})
+    area = serviceArea.geometry.values[0].area/10**6 # avoid calling for index 0 item, this is index invariant
+    print(f'Area: {area} km2')
+    return area
+
 class GetServiceArea:
     def __init__(self, G, bus_stops_df, train_exits_df):
         """ 
