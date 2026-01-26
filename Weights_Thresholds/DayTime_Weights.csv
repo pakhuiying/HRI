@@ -1,0 +1,11 @@
+﻿Variable,Conditional Factor,Vulnerability Factor Score,Conditional Vulnerability Score,Weight
+Prepubescent Population,4,3,12,17.39130435
+Elderly Population,4,2,8,11.5942029
+Socially Isolated,4,1,4,5.797101449
+Functionally Disabled,4,1,4,5.797101449
+Financial Capacity,2,5,10,14.49275362
+AC Ownership,1,4,4,5.797101449
+Minor Medical Treatment Availability,1,4,4,5.797101449
+Comprehensive Medical Treatment Accessibility,1,5,5,7.246376812
+Shade Potential,3,3,9,13.04347826
+Public Transport Accessibility,3,3,9,13.04347826

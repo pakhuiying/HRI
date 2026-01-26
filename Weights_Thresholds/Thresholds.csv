@@ -1,0 +1,15 @@
+﻿Variable,Threshold_type,lower_break,upper_break
+Prepubescent Population,perc,25,75
+Elderly Population,guideline-based,0.14,0.21
+Socially Isolated,perc,25,75
+Functionally Disabled,perc,25,75
+Financial Capacity,perc,25,75
+AC Ownership,perc,25,75
+Minor Medical Treatment Availability,perc,25,75
+Comprehensive Medical Treatment Accessibility,guideline-based,480,360
+Shade Potential,perc,25,75
+Public Transport Accessibility,perc,25,75
+Hottest WBGT,guideline-based,31,33
+Min TA,guideline-based,23.9,26.3
+Daytime Population,perc,25,75
+Nighttime Population,perc,25,75
