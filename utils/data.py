@@ -4,12 +4,15 @@ import numpy as np
 import os
 from glob import glob
 from functools import reduce
+import copy
+from utils import data as Data
 
 # planning area data
 PLANNING_AREA_FP = r"C:\Users\hypak\OneDrive - Singapore Management University\Documents\Data\SG_Map\planningArea.shp"
-# weights fp
+# vulnreability weights fp
 DAYTIME_WEIGHTS_FP = r"Weights_Thresholds\DayTime_Weights.csv"
 NIGHTTIME_WEIGHTS_FP = r"Weights_Thresholds\NightTime_Weights.csv"
+PETAL_WEIGHTS_FP = r"Weights_Thresholds\Petal_Weights.csv"
 # Thresholds fp
 THRESHOLDS_FP = r"Weights_Thresholds\Thresholds.csv"
 
@@ -152,7 +155,7 @@ def consolidate_df(imported_data_dict, planningArea=PLANNING_AREA, normalise=Non
     return store_data
 
 def consolidate_petals(risk_df):
-    """consolidates all the sensitivity, capacity, exposure, hasard into one df
+    """consolidates all the sensitivity, capacity, exposure, hazard into one df
     Args:
         risk_df (dict)
     """
@@ -161,3 +164,21 @@ def consolidate_petals(risk_df):
         petal_df = reduce(lambda x, y: pd.merge(x, y, on = 'PLN_AREA_N',how='outer'), list(HRI_time_dict.values()))
         consolidated_df[HRI_time] = petal_df
     return consolidated_df
+
+def normalisation_imputation_df(risk_imported_df, normalise="max_scaling"):
+    # initialise df for storing normalised and imputed data
+    risk_norm_df = Data.consolidate_df(risk_imported_df, normalise=normalise)
+    risk_norm = copy.deepcopy(risk_norm_df)
+    risk_norm_imputed = copy.deepcopy(risk_norm_df)
+    # invert 'Comprehensive Medical Treatment Accessibility' because higher travel time means lower capacity
+    for HRI_time, HRI_time_dict in risk_norm_df.items():
+        for petal, petal_df in HRI_time_dict.items():
+            if petal == "Capacity":
+                # flip relationship
+                risk_norm[HRI_time][petal]['Comprehensive Medical Treatment Accessibility'] = 100 - petal_df['Comprehensive Medical Treatment Accessibility']
+                risk_norm_imputed[HRI_time][petal]['Comprehensive Medical Treatment Accessibility'] = 100 - petal_df['Comprehensive Medical Treatment Accessibility']
+                # print(f"{HRI_time}: {risk_norm[HRI_time][petal]['Comprehensive Medical Treatment Accessibility'].values[0]}")
+            # then impute NAs with 0th normentile
+            risk_norm_imputed[HRI_time][petal] = risk_norm_imputed[HRI_time][petal].fillna(0)
+
+    return {"raw_df":risk_norm_df, "norm_df":risk_norm, "norm_df_imputed": risk_norm_imputed}
